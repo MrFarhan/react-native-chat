@@ -1,11 +1,37 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Chat, Profile} from '../Screens';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {
+  Chat,
+  ForgotPassword,
+  Profile,
+  Signin,
+  Signup,
+  SplashScreen,
+} from '../Screens';
 import {Icons, colors} from '../Theme';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export default function AppRootRouter() {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {backgroundColor: '#fff'},
+        cardStyle: {backgroundColor: '#fff'},
+      }}>
+      <Stack.Screen name="Sign-in" component={Signin} />
+      <Stack.Screen name="Sign-up" component={Signup} />
+      <Stack.Screen name="Splash-screen" component={SplashScreen} />
+      <Stack.Screen name="Main" component={BottomNavigation} />
+      <Stack.Screen name="Forgot-password" component={ForgotPassword} />
+    </Stack.Navigator>
+  );
+}
+
+function BottomNavigation() {
   return (
     <Tab.Navigator>
       <Tab.Screen
