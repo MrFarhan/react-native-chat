@@ -8,10 +8,13 @@ import ValidationError from '../../Components/ValidationError';
 import {signinSchema} from '../../Formik/schema';
 import {signinInitialValues} from '../../Formik/initialValues';
 import {useFormik} from 'formik';
+import Toast from 'react-native-toast-message';
 
 const SignInForm = () => {
   const {navigate} = useNavigation();
+
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [loader, setLoader] = useState(false);
 
   const handleNavigate = path => {
     navigate(path);
@@ -23,12 +26,17 @@ const SignInForm = () => {
       validationSchema: signinSchema,
       onSubmit: async (values, {resetForm}) => {
         try {
-          handleNavigate('Main');
-          console.log('succes', errors, values);
-          // Toast.show({
-          //   type: 'success',
-          //   text1: 'Login successfully!',
-          // });
+          setLoader(true);
+
+          setTimeout(() => {
+            setLoader(false);
+            handleNavigate('Main');
+            console.log('succes', errors, values);
+            Toast.show({
+              type: 'success',
+              text1: 'Login successfully!',
+            });
+          }, 3000);
         } catch (err) {
           console.log('err:', err);
         }
@@ -71,7 +79,12 @@ const SignInForm = () => {
           Forgot password
         </Text>
       </View>
-      <CustomButton text={'Sign In'} onPress={handleSubmit} />
+      <CustomButton
+        text={'Sign In'}
+        onPress={handleSubmit}
+        loader={loader}
+        disabled={loader}
+      />
     </View>
   );
 };
