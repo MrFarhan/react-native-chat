@@ -1,14 +1,47 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
+import {
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Text,
+} from 'react-native';
+// import {SignInForm} from '../../Components';
+// import {colors} from '../../Themes';
+import {styles} from './Style';
+import SignInForm from './SigninForm';
+import {colors} from '../../Theme';
 
-const Signin = () => {
+const SignIn = () => {
+  const {navigate} = useNavigation();
+
+  const handleNavigate = path => {
+    navigate(path);
+  };
+
   return (
-    <View>
-      <Text>Signin</Text>
-    </View>
+    <SafeAreaView style={styles.main}>
+      <KeyboardAvoidingView
+        style={styles.main}
+        behavior={Platform.OS === 'ios' ? 'padding' : null}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // adjust the value according to your needs
+      >
+        <ScrollView contentContainerStyle={styles.container}>
+          <SignInForm />
+          <Text style={styles.pera}>
+            Or sign in with {'\n'}
+            Don’t have an account?{' '}
+            <Text
+              style={{color: colors.primary}}
+              onPress={() => handleNavigate('Sign-up')}>
+              Sign up
+            </Text>
+          </Text>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
-export default Signin;
-
-const styles = StyleSheet.create({});
+export default SignIn;
