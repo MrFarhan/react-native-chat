@@ -23,8 +23,7 @@ const Signup = () => {
       <KeyboardAvoidingView
         style={styles.main}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500} // Adjust the offset as needed
-      >
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}>
         <ScrollView contentContainerStyle={styles.container}>
           <SignUpForm />
           <Text style={styles.pera}>

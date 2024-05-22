@@ -1,6 +1,5 @@
 import React from 'react';
 import {TextInput, View} from 'react-native';
-// import {colors} from '../../Themes';
 import {styles} from './Style';
 import {colors} from '../../Theme';
 
@@ -26,7 +25,6 @@ const CustomTextfield = props => {
     numberOfLines,
   } = props;
   const handleTextChange = text => {
-    // Remove spaces from the entered text
     const formattedText = text.replace(/\s/g, '');
     onChangeText(isRemoveSpace ? formattedText : text);
   };

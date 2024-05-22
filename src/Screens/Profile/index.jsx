@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-// import {UpdateProfileForm} from '../../Components';
 import {styles} from './Style';
 import ProfileForm from './ProfileForm';
 
@@ -15,8 +14,7 @@ const Profile = () => {
       <KeyboardAvoidingView
         style={styles.main}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500} // Adjust the offset as needed
-      >
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : -500}>
         <ScrollView style={styles.container}>
           <ProfileForm />
         </ScrollView>

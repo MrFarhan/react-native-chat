@@ -7,8 +7,6 @@ import {
   ScrollView,
   Text,
 } from 'react-native';
-// import {SignInForm} from '../../Components';
-// import {colors} from '../../Themes';
 import {styles} from './Style';
 import SignInForm from './SigninForm';
 import {colors} from '../../Theme';
@@ -25,8 +23,7 @@ const SignIn = () => {
       <KeyboardAvoidingView
         style={styles.main}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // adjust the value according to your needs
-      >
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
         <ScrollView contentContainerStyle={styles.container}>
           <SignInForm />
           <Text style={styles.pera}>

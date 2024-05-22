@@ -7,7 +7,6 @@ import {
   ScrollView,
   Text,
 } from 'react-native';
-// import {ForgotPasswordForm} from '../../Components';
 import {colors} from '../../Theme';
 import {styles} from './Style';
 import ForgotPasswordForm from './ForgotPasswordForm';
@@ -24,8 +23,7 @@ const ForgotPassword = () => {
       <KeyboardAvoidingView
         style={styles.main}
         behavior={Platform.OS === 'ios' ? 'padding' : null}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0} // adjust the value according to your needs
-      >
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}>
         <ScrollView contentContainerStyle={styles.container}>
           <ForgotPasswordForm />
           <Text style={styles.pera}>
