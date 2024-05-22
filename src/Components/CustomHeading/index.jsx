@@ -6,21 +6,29 @@ import Icons from '../../Theme/icons';
 import {styles} from './Style';
 
 const CustomHeading = props => {
-  const {text, isBack = false, headingStyle = {}} = props;
+  const {text, isBack = false, headingStyle = {}, rightBtn} = props;
   const {goBack} = useNavigation();
 
   return (
     <View style={styles.headingContainer}>
-      {isBack && (
-        <Icons.Ionicons
-          name="arrow-back"
-          color={colors.primary}
-          size={28}
-          style={{marginRight: 10}}
-          onPress={goBack}
-        />
-      )}
-      <Text style={[styles.heading, headingStyle]}>{text}</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        {isBack && (
+          <Icons.Ionicons
+            name="arrow-back"
+            color={colors.primary}
+            size={28}
+            style={{marginRight: 10}}
+            onPress={goBack}
+          />
+        )}
+        <Text style={[styles.heading, headingStyle]}>{text}</Text>
+      </View>
+      {!!rightBtn && rightBtn}
     </View>
   );
 };

@@ -10,6 +10,7 @@ import {
   SplashScreen,
 } from '../Screens';
 import {Icons, colors} from '../Theme';
+import ChatScreen from '../Screens/Chat/ChatScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -24,6 +25,7 @@ export default function AppRootRouter() {
       }}>
       <Stack.Screen name="Sign-in" component={Signin} />
       <Stack.Screen name="Sign-up" component={Signup} />
+      <Stack.Screen name="chat-screen" component={ChatScreen} />
       <Stack.Screen name="Forgot-password" component={ForgotPassword} />
       <Stack.Screen name="Splash-screen" component={SplashScreen} />
       <Stack.Screen name="Main" component={BottomNavigation} />
