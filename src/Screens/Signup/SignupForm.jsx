@@ -7,10 +7,16 @@ import {useFormik} from 'formik';
 import {signupInitialValues} from '../../Formik/initialValues';
 import {signupSchema} from '../../Formik/schema';
 import ValidationError from '../../Components/ValidationError';
+import {signupUser} from '../../service/auth';
+import Toast from 'react-native-toast-message';
+import {useNavigation} from '@react-navigation/native';
 
 const SignUpForm = () => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureTextEntry2, setSecureTextEntry2] = useState(true);
+
+  const [loader, setLoader] = useState(false);
+  const {navigate} = useNavigation();
 
   const {
     handleChange,
@@ -25,15 +31,21 @@ const SignUpForm = () => {
     validationSchema: signupSchema,
     onSubmit: async (values, {resetForm}) => {
       try {
+        setLoader(true);
+        const result = await signupUser(values);
+        setLoader(false);
+        Toast.show({
+          type: 'success',
+          text1: 'Signedup successfully!',
+        });
+        navigate('Main');
       } catch (err) {
-        console.log('err:', err);
-        // Toast.show({
-        //   type: 'error',
-        //   text1:
-        //     err?.response?.data?.message ||
-        //     err?.message?.replace('[auth/email-already-in-use]', '') ||
-        //     'Something went wrong on Register',
-        // });
+        setLoader(false);
+        console.log('err:', err.message);
+        Toast.show({
+          type: 'error',
+          text1: err.message || 'Something went wrong',
+        });
       }
     },
   });
@@ -78,7 +90,7 @@ const SignUpForm = () => {
           <ValidationError errorMessage={errors.password} />
         )}
       </View>
-      <CustomButton text={'Sign Up'} />
+      <CustomButton text={'Sign Up'} onPress={handleSubmit} loader={loader} />
     </View>
   );
 };

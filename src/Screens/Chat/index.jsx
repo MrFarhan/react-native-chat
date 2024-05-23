@@ -6,12 +6,33 @@ import {styles} from './Style.js';
 import UserCard from './UserCard/UserCard.jsx';
 import Icons from '../../Theme/icons.js';
 import colors from '../../Theme/colors.js';
-import {useNavigation} from '@react-navigation/native';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native';
+import {ListUsers, signOut} from '../../service/auth.js';
 
 const Chat = () => {
   const data = [{name: 'Farhan'}, {name: 'Jawwad'}, {name: 'Saddam'}];
-  const {goBack} = useNavigation();
+  const {navigate} = useNavigation();
 
+  const [users, setUsers] = useState([]);
+  const isFocused = useIsFocused();
+  const fetchUsers = async () => {
+    const data = await ListUsers();
+    setUsers(data);
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [isFocused]);
+
+  const HandleLogout = async () => {
+    await signOut().then(() => {
+      navigate('Sign-in');
+    });
+  };
   return (
     <>
       <CustomHeading
@@ -23,12 +44,12 @@ const Chat = () => {
             color={colors.primary}
             size={28}
             style={{marginRight: 10}}
-            onPress={goBack}
+            onPress={HandleLogout}
           />
         }
       />
       <FlatList
-        data={data}
+        data={users}
         contentContainerStyle={styles.searchResultCardContainer}
         renderItem={({item}) => {
           return <UserCard data={item} />;

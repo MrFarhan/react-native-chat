@@ -9,6 +9,7 @@ import {signinSchema} from '../../Formik/schema';
 import {signinInitialValues} from '../../Formik/initialValues';
 import {useFormik} from 'formik';
 import Toast from 'react-native-toast-message';
+import {signinUser} from '../../service/auth';
 
 const SignInForm = () => {
   const {navigate} = useNavigation();
@@ -27,17 +28,17 @@ const SignInForm = () => {
       onSubmit: async (values, {resetForm}) => {
         try {
           setLoader(true);
-
-          setTimeout(() => {
-            setLoader(false);
-            handleNavigate('Main');
-            console.log('succes', errors, values);
-            Toast.show({
-              type: 'success',
-              text1: 'Login successfully!',
-            });
-          }, 3000);
+          console.log('values are ', values);
+          const newRes = await signinUser(values);
+          console.log('newRes is ', newRes);
+          setLoader(false);
+          handleNavigate('Main');
         } catch (err) {
+          setLoader(false);
+          Toast.show({
+            type: 'error',
+            text1: err?.message || 'Something went wrong',
+          });
           console.log('err:', err);
         }
       },

@@ -1,6 +1,6 @@
 export const signinInitialValues = {
+  email: '',
   password: '',
-  username: '',
 };
 
 export const forgotPasswordInitialValues = {

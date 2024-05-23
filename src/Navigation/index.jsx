@@ -11,11 +11,13 @@ import {
 } from '../Screens';
 import {Icons, colors} from '../Theme';
 import ChatScreen from '../Screens/Chat/ChatScreen';
+import {useAuth} from '../hooks/useAuth';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 export default function AppRootRouter() {
+  const {user} = useAuth();
   return (
     <Stack.Navigator
       screenOptions={{
