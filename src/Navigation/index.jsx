@@ -18,6 +18,7 @@ const Stack = createNativeStackNavigator();
 
 export default function AppRootRouter() {
   const {user} = useAuth();
+  console.log('user is ', !user);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -25,12 +26,18 @@ export default function AppRootRouter() {
         contentStyle: {backgroundColor: '#fff'},
         cardStyle: {backgroundColor: '#fff'},
       }}>
-      <Stack.Screen name="Sign-in" component={Signin} />
-      <Stack.Screen name="Sign-up" component={Signup} />
-      <Stack.Screen name="chat-screen" component={ChatScreen} />
-      <Stack.Screen name="Forgot-password" component={ForgotPassword} />
-      <Stack.Screen name="Splash-screen" component={SplashScreen} />
-      <Stack.Screen name="Main" component={BottomNavigation} />
+      {!user ? (
+        <>
+          <Stack.Screen name="Sign-in" component={Signin} />
+          <Stack.Screen name="Sign-up" component={Signup} />
+          <Stack.Screen name="Forgot-password" component={ForgotPassword} />
+        </>
+      ) : (
+        <>
+          <Stack.Screen name="Main" component={BottomNavigation} />
+          <Stack.Screen name="chat-screen" component={ChatScreen} />
+        </>
+      )}
     </Stack.Navigator>
   );
 }

@@ -39,6 +39,17 @@ export const updateUser = async (values, id, path) => {
   return update;
 };
 
+export const getCurrentUserData = async () => {
+  try {
+    const currentUserId = auth().currentUser.uid;
+    const user = await firestore().collection('Users').doc(currentUserId).get();
+    return user;
+  } catch (error) {
+    console.error('Error listing users:', error);
+    throw error;
+  }
+};
+
 export const ListUsers = async () => {
   try {
     const usersSnapshot = await firestore().collection('Users').get();

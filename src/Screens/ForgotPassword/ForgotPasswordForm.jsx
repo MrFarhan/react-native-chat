@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, View} from 'react-native';
 import {styles} from './Style';
 import {CustomButton, CustomHeading, CustomTextfield} from '../../Components';
@@ -6,8 +6,12 @@ import {forgotPasswordInitialValues} from '../../Formik/initialValues';
 import {forgotPasswordSchema} from '../../Formik/schema';
 import {useFormik} from 'formik';
 import ValidationError from '../../Components/ValidationError';
+import {resetPassword} from '../../service/auth';
+import Toast from 'react-native-toast-message';
 
 const ForgotPasswordForm = () => {
+  const [loader, setLoader] = useState(false);
+
   const {handleChange, handleBlur, touched, errors, values, handleSubmit} =
     useFormik({
       initialValues: forgotPasswordInitialValues,
@@ -15,19 +19,16 @@ const ForgotPasswordForm = () => {
       onSubmit: async (values, {resetForm}) => {
         const {email} = values;
         try {
-          setDisable(true);
           setLoader(true);
-          await resetPassword(email);
+          const data = await resetPassword(email);
           Toast.show({
             type: 'success',
             text1: 'Email Sent',
             text2: 'Reset password Link sent to your provided email',
           });
-          setDisable(false);
           setLoader(false);
           resetForm();
         } catch (err) {
-          setDisable(false);
           setLoader(false);
           Toast.show({
             type: 'error',
