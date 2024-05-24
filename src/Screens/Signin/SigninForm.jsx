@@ -28,9 +28,8 @@ const SignInForm = () => {
       onSubmit: async (values, {resetForm}) => {
         try {
           setLoader(true);
-          const newRes = await signinUser(values);
+          await signinUser(values);
           setLoader(false);
-          handleNavigate('Main');
         } catch (err) {
           setLoader(false);
           Toast.show({
@@ -51,6 +50,7 @@ const SignInForm = () => {
           onChangeText={handleChange('email')}
           onBlur={handleBlur('email')}
           value={values.email}
+          customStyle={{}}
         />
         {!!errors.email && touched.email && (
           <ValidationError errorMessage={errors.email} />

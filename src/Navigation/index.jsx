@@ -1,17 +1,9 @@
-import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {
-  Chat,
-  ForgotPassword,
-  Profile,
-  Signin,
-  Signup,
-  SplashScreen,
-  Users,
-} from '../Screens';
-import {Icons, colors} from '../Theme';
+import React from 'react';
+import {Chat, ForgotPassword, Profile, Signin, Signup, Users} from '../Screens';
 import ChatScreen from '../Screens/Chat/ChatScreen';
+import {Icons, colors} from '../Theme';
 import {useAuth} from '../hooks/useAuth';
 
 const Tab = createBottomTabNavigator();

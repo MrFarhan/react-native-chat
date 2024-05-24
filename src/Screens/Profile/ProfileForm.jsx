@@ -56,7 +56,7 @@ const ProfileForm = () => {
     validationSchema: updateProfileSchema,
     onSubmit: async (values, {resetForm}) => {
       try {
-        if (profilePic && profilePic?.includes('file://')) {
+        if (profilePic && profilePic?.path?.includes('file://')) {
           const dp = await uploadPicture(profilePic.path);
           setProfilePic(dp);
         }
@@ -68,12 +68,14 @@ const ProfileForm = () => {
           text1: 'Profile updated successfully',
         });
       } catch (err) {
-        console.log('err:', err);
+        console.log('catch err:', err);
       }
     },
   });
   let disabled =
-    userData?.name === values?.name && !profilePic?.path?.includes('file://');
+    userData?.name === values?.name &&
+    profilePic &&
+    !profilePic?.path?.includes('file://');
   const HandlePictureChange = image => {
     setProfilePic(image);
     // console.log(image);

@@ -21,9 +21,7 @@ const Users = () => {
   }, [isFocused]);
 
   const HandleLogout = async () => {
-    await signOut().then(() => {
-      navigate('Sign-in');
-    });
+    await signOut().then(() => {});
   };
   return (
     <SafeAreaView>

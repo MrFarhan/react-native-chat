@@ -140,6 +140,27 @@ export const getAllMsgs = async (id, uuid) => {
   return allMsgs;
 };
 
+export const getAllMsgsSubscription = (id, uuid, callback) => {
+  const docId = uuid > id ? `${id}-${uuid}` : `${uuid}-${id}`;
+
+  const msgRef = firestore()
+    .collection('conversations')
+    .doc(docId)
+    .collection('messages')
+    .orderBy('createdAt', 'desc');
+
+  return msgRef.onSnapshot(querySnap => {
+    const allMsgs = querySnap.docs.map(docSnap => {
+      const data = docSnap.data();
+      return {
+        ...data,
+        createdAt: data?.createdAt ? data.createdAt.toDate() : new Date(),
+      };
+    });
+    callback(allMsgs);
+  });
+};
+
 export const sendMsg = async (id, uuid, msg) => {
   const docId = uuid > id ? `${id}-${uuid}` : `${uuid}-${id}`;
 

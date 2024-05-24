@@ -1,20 +1,13 @@
-import React, {useState, useCallback, useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, SafeAreaView, Text} from 'react-native';
-import {GiftedChat} from 'react-native-gifted-chat';
 import {CustomHeading, UserCard} from '../../Components';
 import {styles} from './Style.js';
 import Icons from '../../Theme/icons.js';
 import colors from '../../Theme/colors.js';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {ListUsers, signOut} from '../../service/auth.js';
 
 const Chat = () => {
-  const {navigate} = useNavigation();
-
   const [users, setUsers] = useState([]);
   const isFocused = useIsFocused();
   const fetchUsers = async () => {
@@ -27,9 +20,7 @@ const Chat = () => {
   }, [isFocused]);
 
   const HandleLogout = async () => {
-    await signOut().then(() => {
-      navigate('Sign-in');
-    });
+    await signOut().then(() => {});
   };
   return (
     <SafeAreaView>

@@ -1,11 +1,10 @@
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {GiftedChat} from 'react-native-gifted-chat';
 import {CustomHeading} from '../../Components';
 import {useIsFocused, useRoute} from '@react-navigation/native';
-import {useAuth} from '../../hooks/useAuth';
 import {firebase} from '@react-native-firebase/auth';
-import {getAllMsgs, sendMsg} from '../../service/auth';
+import {getAllMsgsSubscription, sendMsg} from '../../service/auth';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -13,29 +12,15 @@ const ChatScreen = () => {
   const {id, name} = route.params;
   const uuid = firebase.auth().currentUser.uid;
   const isFocused = useIsFocused();
+
   useEffect(() => {
-    getAllMsgs(id, uuid).then(res => {
-      console.log('data', res);
+    const unsubscribe = getAllMsgsSubscription(id, uuid, res => {
       setMessages(res);
     });
-  }, [isFocused]);
 
-  console.log('navigation', route.params);
-  // useEffect(() => {
-  //   setMessages([
-  //     {
-  //       _id: 1,
-  //       text: 'Hello developer',
-  //       createdAt: new Date(),
-  //       image: 'https://facebook.github.io/react/img/logo_og.png',
-  //       user: {
-  //         _id: 2,
-  //         name: 'React Native',
-  //         avatar: 'https://placeimg.com/140/140/any',
-  //       },
-  //     },
-  //   ]);
-  // }, []);
+    // Cleanup the subscription on unmount
+    return () => unsubscribe();
+  }, [isFocused, id]);
 
   const onSend = useCallback(async (messages = []) => {
     const msg = messages[0];
@@ -48,6 +33,7 @@ const ChatScreen = () => {
       GiftedChat.append(previousMessages, msgObj),
     );
     await sendMsg(id, uuid, msgObj);
+    console.log('on send calling');
   }, []);
 
   return (

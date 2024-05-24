@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: multiline ? 'flex-start' : 'center',
     borderWidth: 1,
-    borderColor: colors.gray,
+    borderColor: colors.black,
     borderRadius: 6,
     maxHeight: multiline ? 200 : 50,
     minHeight: multiline && 100,
@@ -25,4 +25,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     textAlignVertical: multiline ? 'top' : 'center',
   }),
+  defaultInput: {
+    color: 'black',
+  },
 });
