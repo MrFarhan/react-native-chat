@@ -41,6 +41,5 @@ export const updateProfileSchema = yup
       .email('Email must be a valid email')
       .required('Email is required'),
     name: yup.string().trim().required('Name is required'),
-    password: yup.string().trim().required('Password is required'),
   })
   .required();

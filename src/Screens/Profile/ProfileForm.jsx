@@ -8,17 +8,29 @@ import {updateProfileInitialValues} from '../../Formik/initialValues';
 import {updateProfileSchema} from '../../Formik/schema';
 import ValidationError from '../../Components/ValidationError';
 import {useIsFocused} from '@react-navigation/native';
-import {getCurrentUserData} from '../../service/auth';
+import {
+  getCurrentUserData,
+  updateUser,
+  uploadPicture,
+} from '../../service/auth';
+import {ProfilePic} from './ProfilePic';
+import {images} from '../../Theme';
+import Toast from 'react-native-toast-message';
 
 const ProfileForm = () => {
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [secureTextEntry2, setSecureTextEntry2] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [profilePic, setProfilePic] = useState(null);
+  const [userData, setUserData] = useState(null);
   const isFocus = useIsFocused();
   const getUserData = async () => {
     try {
       const data = await getCurrentUserData();
+      if (data._data.dp) {
+        setUserData({dp: data._data.dp});
+        setProfilePic(data._data.dp);
+      }
       let fields = Object.entries(data._data);
+      setUserData({name: data._data.name});
       fields?.map(([key, val]) => setFieldValue(key, val));
       setLoading(false);
     } catch (error) {
@@ -38,22 +50,35 @@ const ProfileForm = () => {
     values,
     handleSubmit,
     setFieldValue,
+    dirty,
   } = useFormik({
     initialValues: updateProfileInitialValues,
     validationSchema: updateProfileSchema,
     onSubmit: async (values, {resetForm}) => {
       try {
-        handleNavigate('Main');
-        console.log('succes', errors, values);
-        // Toast.show({
-        //   type: 'success',
-        //   text1: 'Login successfully!',
-        // });
+        if (profilePic.includes('file://')) {
+          const dp = await uploadPicture(profilePic.path);
+          setProfilePic(dp);
+        }
+        if (userData?.name !== values?.name) {
+          await updateUser(values, 'Users');
+        }
+        Toast.show({
+          type: 'success',
+          text1: 'Profile updated successfully',
+        });
       } catch (err) {
         console.log('err:', err);
       }
     },
   });
+  console.log('user data is ', userData, values);
+  let disabled =
+    userData?.name === values?.name && !profilePic?.path?.includes('file://');
+  const HandlePictureChange = image => {
+    setProfilePic(image);
+    // console.log(image);
+  };
 
   if (loading) {
     return (
@@ -68,10 +93,10 @@ const ProfileForm = () => {
       </View>
     );
   }
-
   return (
     <View style={{flex: 1}}>
       <CustomHeading text={'Update Profile'} headingStyle={styles.heading} />
+      <ProfilePic onChange={HandlePictureChange} source={profilePic} />
       <View style={styles.inputContainer}>
         <CustomTextfield
           placeholder="Name"
@@ -97,6 +122,7 @@ const ProfileForm = () => {
         text={'Update'}
         buttonStyle={{marginBottom: 0, paddingBottom: 70}}
         onPress={handleSubmit}
+        disabled={disabled}
       />
     </View>
   );

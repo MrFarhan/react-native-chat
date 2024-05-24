@@ -4,13 +4,17 @@ import {styles} from './Style';
 import {colors} from '../../Theme';
 
 const CustomButton = props => {
-  const {onPress = () => {}, text, buttonStyle = {}, loader} = props;
+  const {onPress = () => {}, text, buttonStyle = {}, loader, disabled} = props;
   return (
     <View style={[styles.btnContainer, buttonStyle]}>
       <TouchableOpacity
+        disabled={disabled}
         activeOpacity={0.8}
         onPress={onPress}
-        style={styles.btn}>
+        style={{
+          ...styles.btn,
+          backgroundColor: disabled ? 'gray' : colors.primary,
+        }}>
         {loader ? (
           <ActivityIndicator color={colors.black} />
         ) : (

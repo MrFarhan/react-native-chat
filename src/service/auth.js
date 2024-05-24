@@ -1,5 +1,7 @@
+import {utils} from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
 
 export const signupUser = async values => {
   const {email, password, name} = values || {};
@@ -34,9 +36,60 @@ export const signOut = async email => {
   return res;
 };
 
-export const updateUser = async (values, id, path) => {
-  const update = firestore().collection(path).doc(id).set(values);
+export const updateUser = async (values, path) => {
+  const uid = auth().currentUser.uid;
+  const update = firestore().collection(path).doc(uid).update(values);
   return update;
+};
+
+export const uploadPicture = async file => {
+  try {
+    const id = auth().currentUser.uid;
+    return storage()
+      .ref(`Users/${id}`)
+      .putFile(file)
+      .then(() => {
+        return storage()
+          .ref(`Users/${id}`)
+          .getDownloadURL()
+          .then(URL => {
+            return firestore()
+              .collection('Users')
+              .doc(id)
+              .update({
+                dp: URL,
+              })
+              .then(() => {
+                const res = {
+                  status: true,
+                  message: 'profile picture updated.',
+                  dp: URL,
+                };
+                return res;
+              })
+              .catch(error => {
+                const res = {
+                  status: false,
+                  error: error.message,
+                };
+                return res;
+              });
+          });
+      })
+      .catch(error => {
+        const res = {
+          status: false,
+          error: error.message,
+        };
+        return res;
+      });
+  } catch (error) {
+    const res = {
+      status: false,
+      error: error.message,
+    };
+    return res;
+  }
 };
 
 export const getCurrentUserData = async () => {
@@ -52,8 +105,11 @@ export const getCurrentUserData = async () => {
 
 export const ListUsers = async () => {
   try {
+    let id = auth().currentUser.uid;
     const usersSnapshot = await firestore().collection('Users').get();
-    const users = usersSnapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+    const users = usersSnapshot.docs
+      .filter(val => val.id !== id)
+      .map(doc => ({id: doc.id, ...doc.data()}));
     return users;
   } catch (error) {
     console.error('Error listing users:', error);

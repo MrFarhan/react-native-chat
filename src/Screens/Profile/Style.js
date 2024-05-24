@@ -46,4 +46,18 @@ export const styles = StyleSheet.create({
     borderColor: colors.gray,
     backgroundColor: toggle ? colors.primary : colors.white,
   }),
+
+  scroll: {
+    backgroundColor: 'white',
+    flex: 1,
+  },
+  userRow: {
+    alignItems: 'center',
+    padding: 15,
+    marginTop: 70,
+  },
+  content: {
+    flex: 1,
+    backgroundColor: '#d8d8db',
+  },
 });
