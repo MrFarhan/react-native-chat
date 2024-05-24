@@ -12,7 +12,8 @@ export const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 40,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
+    fontFamily: 'Reddit Mono Bold',
   },
   subHeading: {fontSize: 12, marginBottom: 20, color: colors.gray_font},
   inputContainer: {

@@ -1,5 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
-import {FlatList, Text} from 'react-native';
+import {FlatList, SafeAreaView, Text} from 'react-native';
 import {GiftedChat} from 'react-native-gifted-chat';
 import {CustomHeading} from '../../Components';
 import {styles} from './Style.js';
@@ -34,7 +34,7 @@ const Chat = () => {
     });
   };
   return (
-    <>
+    <SafeAreaView>
       <CustomHeading
         text={'Chat'}
         headingStyle={styles.heading}
@@ -55,7 +55,7 @@ const Chat = () => {
           return <UserCard data={item} />;
         }}
       />
-    </>
+    </SafeAreaView>
   );
 };
 

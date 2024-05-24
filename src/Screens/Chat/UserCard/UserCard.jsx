@@ -3,18 +3,14 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
 const UserCard = ({data}) => {
-  const {name} = data || {};
+  const {name, id} = data || {};
 
   const {navigate} = useNavigation();
-
-  const handleNavigate = path => {
-    navigate(path);
-  };
 
   return (
     <Pressable
       style={styles.container}
-      onPress={() => handleNavigate('chat-screen')}>
+      onPress={() => navigate('chat-screen', {name, id})}>
       <Text>{name}</Text>
     </Pressable>
   );

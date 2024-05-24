@@ -26,14 +26,13 @@
 	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
-	  <!-- Do not change NSAllowsArbitraryLoads to true, or you will risk app rejection! -->
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -71,6 +70,15 @@
 		<string>Octicons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Fontisto.ttf</string>
+		<string>Reddit Mono.ttf</string>
+		<string>RedditMono-Light.ttf</string>
+		<string>Reddit Mono Bold.ttf</string>
+		<string>Reddit Mono Black.ttf</string>
+		<string>Reddit Mono ExtraBold.ttf</string>
+		<string>Reddit Mono Medium.ttf</string>
+		<string>Reddit Mono Regular.ttf</string>
+		<string>Reddit Mono SemiBold.ttf</string>
+		<string>Reddit Mono Extra Light.ttf</string>
 	</array>
 </dict>
 </plist>

@@ -1,0 +1,41 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/Assets/Fonts/Reddit Mono Black.ttf",
+      "sha1": "2ef65306df5d821b64c5bdbfd41f54eff38cd1a2"
+    },
+    {
+      "path": "src/Assets/Fonts/Reddit Mono Bold.ttf",
+      "sha1": "69ecd57c6c6423d71d574ddf194cae9919f31766"
+    },
+    {
+      "path": "src/Assets/Fonts/Reddit Mono Extra Light.ttf",
+      "sha1": "86b71f5065d5c70b14d761559493911d4ad2fbef"
+    },
+    {
+      "path": "src/Assets/Fonts/Reddit Mono ExtraBold.ttf",
+      "sha1": "dd29522a0ea727fc3b595e6a2b7f988bdab10175"
+    },
+    {
+      "path": "src/Assets/Fonts/Reddit Mono Medium.ttf",
+      "sha1": "93f7b4d8ada471f8fdac30d51aa5edd175e91560"
+    },
+    {
+      "path": "src/Assets/Fonts/Reddit Mono Regular.ttf",
+      "sha1": "b82374ddd6f128c2a7c63d25c8eb84edb105c61b"
+    },
+    {
+      "path": "src/Assets/Fonts/Reddit Mono SemiBold.ttf",
+      "sha1": "cf194caabbbe51a5ad29085a08af80fb79f2a111"
+    },
+    {
+      "path": "src/Assets/Fonts/Reddit Mono.ttf",
+      "sha1": "b82374ddd6f128c2a7c63d25c8eb84edb105c61b"
+    },
+    {
+      "path": "src/Assets/Fonts/RedditMono-Light.ttf",
+      "sha1": "b50ea845923a5181d6e90f7c2dd9da545f70db9a"
+    }
+  ]
+}
