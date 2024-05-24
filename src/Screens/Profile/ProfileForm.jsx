@@ -56,12 +56,12 @@ const ProfileForm = () => {
     validationSchema: updateProfileSchema,
     onSubmit: async (values, {resetForm}) => {
       try {
-        if (profilePic.includes('file://')) {
+        if (profilePic && profilePic?.includes('file://')) {
           const dp = await uploadPicture(profilePic.path);
           setProfilePic(dp);
         }
         if (userData?.name !== values?.name) {
-          await updateUser(values, 'Users');
+          const update = await updateUser(values, 'Users');
         }
         Toast.show({
           type: 'success',
@@ -72,7 +72,6 @@ const ProfileForm = () => {
       }
     },
   });
-  console.log('user data is ', userData, values);
   let disabled =
     userData?.name === values?.name && !profilePic?.path?.includes('file://');
   const HandlePictureChange = image => {

@@ -16,7 +16,6 @@ export function useAuth() {
 
     return unsubscribeFromAuthStateChanged;
   }, []);
-
   return {
     user,
   };

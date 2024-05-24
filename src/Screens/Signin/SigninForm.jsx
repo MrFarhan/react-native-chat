@@ -28,9 +28,7 @@ const SignInForm = () => {
       onSubmit: async (values, {resetForm}) => {
         try {
           setLoader(true);
-          console.log('values are ', values);
           const newRes = await signinUser(values);
-          console.log('newRes is ', newRes);
           setLoader(false);
           handleNavigate('Main');
         } catch (err) {

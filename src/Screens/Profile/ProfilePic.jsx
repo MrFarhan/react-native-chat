@@ -19,7 +19,7 @@ export const ProfilePic = props => {
   let img = uri ? {uri: uri} : images.user;
   return (
     <TouchableOpacity onPress={pickPicture}>
-      <Image style={styles.avatar} {...props} source={img} />
+      <Image style={styles.avatar} source={img} />
     </TouchableOpacity>
   );
 };

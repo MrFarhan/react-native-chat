@@ -1,18 +1,13 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {FlatList, SafeAreaView, Text} from 'react-native';
-import {GiftedChat} from 'react-native-gifted-chat';
-import {CustomHeading, UserCard} from '../../Components';
+import React, {useState, useEffect} from 'react';
+import {FlatList, SafeAreaView} from 'react-native';
+import {CustomHeading, UserCard} from '../../Components/index.js';
 import {styles} from './Style.js';
 import Icons from '../../Theme/icons.js';
 import colors from '../../Theme/colors.js';
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {ListUsers, signOut} from '../../service/auth.js';
 
-const Chat = () => {
+const Users = () => {
   const {navigate} = useNavigation();
 
   const [users, setUsers] = useState([]);
@@ -21,7 +16,6 @@ const Chat = () => {
     const data = await ListUsers();
     setUsers(data);
   };
-
   useEffect(() => {
     fetchUsers();
   }, [isFocused]);
@@ -34,7 +28,7 @@ const Chat = () => {
   return (
     <SafeAreaView>
       <CustomHeading
-        text={'Chat'}
+        text={'Users'}
         headingStyle={styles.heading}
         rightBtn={
           <Icons.MaterialCommunityIcons
@@ -50,11 +44,11 @@ const Chat = () => {
         data={users}
         contentContainerStyle={styles.searchResultCardContainer}
         renderItem={({item}) => {
-          return <UserCard data={item} isDeletable />;
+          return <UserCard data={item} />;
         }}
       />
     </SafeAreaView>
   );
 };
 
-export default Chat;
+export default Users;

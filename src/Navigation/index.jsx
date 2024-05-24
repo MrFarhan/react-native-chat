@@ -8,6 +8,7 @@ import {
   Signin,
   Signup,
   SplashScreen,
+  Users,
 } from '../Screens';
 import {Icons, colors} from '../Theme';
 import ChatScreen from '../Screens/Chat/ChatScreen';
@@ -18,7 +19,6 @@ const Stack = createNativeStackNavigator();
 
 export default function AppRootRouter() {
   const {user} = useAuth();
-  console.log('user is ', !user);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -45,6 +45,22 @@ export default function AppRootRouter() {
 function BottomNavigation() {
   return (
     <Tab.Navigator>
+      <Tab.Screen
+        name="Users"
+        component={Users}
+        options={{
+          headerShown: null,
+          tabBarIcon: ({focused}) => {
+            return (
+              <Icons.FontAwesome
+                name="users"
+                size={26}
+                color={focused ? colors.gray_bg_light : colors.gray}
+              />
+            );
+          },
+        }}
+      />
       <Tab.Screen
         name="Chat"
         component={Chat}

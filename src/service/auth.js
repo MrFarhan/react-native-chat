@@ -9,14 +9,13 @@ export const signupUser = async values => {
     email?.toLowerCase(),
     password,
   );
-  console.log('res is ', res);
   let userId = res?.user?.uid;
   const data = {
     userId,
     email: email?.toLowerCase(),
     name,
   };
-  const newRes = await updateUser(data, userId, `Users`);
+  const newRes = await addUser(data, `Users`);
   return newRes;
 };
 
@@ -34,6 +33,12 @@ export const resetPassword = async email => {
 export const signOut = async email => {
   const res = await auth().signOut();
   return res;
+};
+
+export const addUser = async (values, path) => {
+  const uid = auth().currentUser.uid;
+  const add = firestore().collection(path).doc(uid).set(values);
+  return add;
 };
 
 export const updateUser = async (values, path) => {
@@ -115,4 +120,44 @@ export const ListUsers = async () => {
     console.error('Error listing users:', error);
     throw error;
   }
+};
+
+export const getAllMsgs = async (id, uuid) => {
+  const docId = uuid > id ? `${id}-${uuid}` : `${uuid}-${id}`;
+
+  const querySnap = await firestore()
+    .collection('conversations')
+    .doc(docId)
+    .collection('messages')
+    .orderBy('createdAt', 'desc')
+    .get();
+  const allMsgs = querySnap.docs.map(docSnap => {
+    return {
+      ...docSnap.data(),
+      createdAt: docSnap.data().createdAt.toDate(),
+    };
+  });
+  return allMsgs;
+};
+
+export const sendMsg = async (id, uuid, msg) => {
+  const docId = uuid > id ? `${id}-${uuid}` : `${uuid}-${id}`;
+
+  const partyAdd = await firestore()
+    .collection('conversations')
+    .doc(docId)
+    .set(
+      {
+        parties: {[id]: true, [uuid]: true},
+      },
+      {merge: true},
+    );
+
+  const res = await firestore()
+    .collection('conversations')
+    .doc(docId)
+    .collection('messages')
+    .add({...msg, createdAt: firestore.FieldValue.serverTimestamp()});
+
+  return res;
 };
