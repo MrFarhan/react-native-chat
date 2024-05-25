@@ -4,7 +4,11 @@ import {GiftedChat} from 'react-native-gifted-chat';
 import {CustomHeading} from '../../Components';
 import {useIsFocused, useRoute} from '@react-navigation/native';
 import {firebase} from '@react-native-firebase/auth';
-import {getAllMsgsSubscription, sendMsg} from '../../service/auth';
+import {
+  getAllMsgsSubscription,
+  getCurrentUserData,
+  sendMsg,
+} from '../../service/auth';
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState([]);
@@ -12,6 +16,20 @@ const ChatScreen = () => {
   const {id, name} = route.params;
   const uuid = firebase.auth().currentUser.uid;
   const isFocused = useIsFocused();
+
+  const [userData, setUserData] = useState(null);
+  console.log('user data is ', userData);
+  const getUserData = async () => {
+    try {
+      const data = await getCurrentUserData();
+      setUserData({name: data._data.name});
+    } catch (error) {
+      console.log('error is ', error);
+    }
+  };
+  useEffect(() => {
+    getUserData();
+  }, [isFocused]);
 
   useEffect(() => {
     const unsubscribe = getAllMsgsSubscription(id, uuid, res => {
@@ -22,19 +40,26 @@ const ChatScreen = () => {
     return () => unsubscribe();
   }, [isFocused, id]);
 
-  const onSend = useCallback(async (messages = []) => {
-    const msg = messages[0];
-    const msgObj = {
-      ...msg,
-      sendtBy: uuid,
-      sentTo: id,
-    };
-    setMessages(previousMessages =>
-      GiftedChat.append(previousMessages, msgObj),
-    );
-    await sendMsg(id, uuid, msgObj);
-    console.log('on send calling');
-  }, []);
+  const onSend = useCallback(
+    async (messages = []) => {
+      const msg = messages[0];
+      const msgObj = {
+        ...msg,
+        sentBy: uuid,
+        sentTo: id,
+      };
+      setMessages(previousMessages =>
+        GiftedChat.append(previousMessages, msgObj),
+      );
+      let partiesInfo = {
+        [id]: {name},
+        [uuid]: {name: userData?.name},
+      };
+      console.log('partiesInfo', partiesInfo);
+      await sendMsg(id, uuid, msgObj, partiesInfo);
+    },
+    [userData?.name],
+  );
 
   return (
     <SafeAreaView style={{flex: 1}}>

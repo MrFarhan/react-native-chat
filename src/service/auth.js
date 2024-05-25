@@ -103,7 +103,6 @@ export const getCurrentUserData = async () => {
     const user = await firestore().collection('Users').doc(currentUserId).get();
     return user;
   } catch (error) {
-    console.error('Error listing users:', error);
     throw error;
   }
 };
@@ -117,7 +116,6 @@ export const ListUsers = async () => {
       .map(doc => ({id: doc.id, ...doc.data()}));
     return users;
   } catch (error) {
-    console.error('Error listing users:', error);
     throw error;
   }
 };
@@ -152,6 +150,7 @@ export const getAllMsgsSubscription = (id, uuid, callback) => {
   return msgRef.onSnapshot(querySnap => {
     const allMsgs = querySnap.docs.map(docSnap => {
       const data = docSnap.data();
+      console.log('data is ', data);
       return {
         ...data,
         createdAt: data?.createdAt ? data.createdAt.toDate() : new Date(),
@@ -161,15 +160,16 @@ export const getAllMsgsSubscription = (id, uuid, callback) => {
   });
 };
 
-export const sendMsg = async (id, uuid, msg) => {
+export const sendMsg = async (id, uuid, msg, partiesInfo) => {
   const docId = uuid > id ? `${id}-${uuid}` : `${uuid}-${id}`;
 
-  const partyAdd = await firestore()
+  await firestore()
     .collection('conversations')
     .doc(docId)
     .set(
       {
         parties: {[id]: true, [uuid]: true},
+        partiesInfo: partiesInfo,
       },
       {merge: true},
     );
@@ -181,4 +181,59 @@ export const sendMsg = async (id, uuid, msg) => {
     .add({...msg, createdAt: firestore.FieldValue.serverTimestamp()});
 
   return res;
+};
+
+export const ChatHistory = async () => {
+  try {
+    const uid = auth().currentUser.uid;
+    const querySnapshot = await firestore().collection('conversations').get();
+
+    const conversations = querySnapshot.docs
+      .filter(doc => doc.data().parties && !!doc.data().parties[uid])
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+    return conversations;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const DeleteChat = async (conversationId, userId) => {
+  try {
+    console.log(
+      'Received IDs - Conversation ID:',
+      conversationId,
+      'User ID:',
+      userId,
+    );
+
+    const conversationRef = firestore()
+      .collection('conversations')
+      .doc(conversationId);
+
+    const conversationSnapshot = await conversationRef.get();
+    console.log(
+      'Conversation Snapshot:',
+      conversationSnapshot.exists ? 'Exists' : 'Does not exist',
+    );
+
+    if (!conversationSnapshot.exists) {
+      throw new Error(`Conversation with ID ${conversationId} not found.`);
+    }
+
+    // Checking the structure of the document before updating
+    console.log('Document data:', conversationSnapshot.data());
+
+    await conversationRef.update({[`parties.${userId}`]: false});
+
+    console.log('Update successful');
+
+    return true; // Assuming successful update
+  } catch (error) {
+    console.error('Error:', error.message);
+    throw error;
+  }
 };

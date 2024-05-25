@@ -3,8 +3,8 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Icons, colors} from '../../Theme';
 
-const UserCard = ({data, isDeletable}) => {
-  const {name, id} = data || {};
+const UserCard = ({data, isDeletable, HandleDelete}) => {
+  const {name, id, conversationId} = data || {};
 
   const {navigate} = useNavigation();
 
@@ -24,7 +24,7 @@ const UserCard = ({data, isDeletable}) => {
       {isDeletable && (
         <Pressable
           style={{...styles.container, width: '20%'}}
-          onPress={() => Alert.alert('delete clicked')}>
+          onPress={() => HandleDelete(conversationId, id, name)}>
           <Icons.Feather
             name="trash-2"
             color={colors.red}

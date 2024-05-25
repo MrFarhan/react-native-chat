@@ -4,12 +4,10 @@ import {CustomHeading, UserCard} from '../../Components/index.js';
 import {styles} from './Style.js';
 import Icons from '../../Theme/icons.js';
 import colors from '../../Theme/colors.js';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
+import {useIsFocused} from '@react-navigation/native';
 import {ListUsers, signOut} from '../../service/auth.js';
 
 const Users = () => {
-  const {navigate} = useNavigation();
-
   const [users, setUsers] = useState([]);
   const isFocused = useIsFocused();
   const fetchUsers = async () => {
