@@ -35,7 +35,7 @@ const CustomTextfield = props => {
       </View>
       <TextInput
         multiline={multiline}
-        style={{...customStyle, ...styles.defaultInput}}
+        style={customStyle || styles.textArea(!!StartAdornment, multiline)}
         placeholder={placeholder}
         placeholderTextColor={colors.gray}
         secureTextEntry={secureTextEntry}

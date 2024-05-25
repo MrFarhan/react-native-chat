@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View} from 'react-native';
 import {styles} from './Style';
 import {Icons} from '../../Theme';
@@ -10,6 +10,9 @@ import {signinInitialValues} from '../../Formik/initialValues';
 import {useFormik} from 'formik';
 import Toast from 'react-native-toast-message';
 import {signinUser} from '../../service/auth';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
+import {Button} from 'react-native';
+import GoogleSigninButton from './GoogleSignin';
 
 const SignInForm = () => {
   const {navigate} = useNavigation();
@@ -84,6 +87,8 @@ const SignInForm = () => {
         loader={loader}
         disabled={loader}
       />
+
+      <GoogleSigninButton />
     </View>
   );
 };

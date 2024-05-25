@@ -2,6 +2,7 @@ import {utils} from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export const signupUser = async values => {
   const {email, password, name} = values || {};
@@ -37,13 +38,13 @@ export const signOut = async email => {
 
 export const addUser = async (values, path) => {
   const uid = auth().currentUser.uid;
-  const add = firestore().collection(path).doc(uid).set(values);
+  const add = await firestore().collection(path).doc(uid).set(values);
   return add;
 };
 
 export const updateUser = async (values, path) => {
   const uid = auth().currentUser.uid;
-  const update = firestore().collection(path).doc(uid).update(values);
+  const update = await firestore().collection(path).doc(uid).update(values);
   return update;
 };
 
@@ -235,5 +236,34 @@ export const DeleteChat = async (conversationId, userId) => {
   } catch (error) {
     console.error('Error:', error.message);
     throw error;
+  }
+};
+
+export const googleSignIn = async () => {
+  try {
+    const {idToken} = await GoogleSignin.signIn();
+    console.log('idToken', idToken);
+    const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+    console.log('googleCredential', googleCredential);
+    const userInfo = await auth().signInWithCredential(googleCredential);
+    console.log('userInfo', userInfo);
+    if (userInfo?.additionalUserInfo?.isNewUser) {
+      let data = {
+        name: userInfo.user._user.displayName,
+        userId: userInfo.user._user.uid,
+        email: userInfo.user._user.email,
+        dp: userInfo.user._user.photoURL,
+        type: 'google',
+      };
+      console.log('data to update is ', data);
+      const update = await addUser(data, 'Users');
+      console.log('hello', update);
+    } else {
+      console.log('else ');
+      // setErrResponse({ status: false, error: 'Error' });
+    }
+  } catch (error) {
+    console.log('error ', error);
+    // setErrResponse({ status: false, error: error.message });
   }
 };
