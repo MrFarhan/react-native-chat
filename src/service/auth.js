@@ -151,7 +151,6 @@ export const getAllMsgsSubscription = (id, uuid, callback) => {
   return msgRef.onSnapshot(querySnap => {
     const allMsgs = querySnap.docs.map(docSnap => {
       const data = docSnap.data();
-      console.log('data is ', data);
       return {
         ...data,
         createdAt: data?.createdAt ? data.createdAt.toDate() : new Date(),
@@ -233,11 +232,8 @@ export const DeleteChat = async (conversationId, userId) => {
 export const googleSignIn = async () => {
   try {
     const {idToken} = await GoogleSignin.signIn();
-    console.log('idToken', idToken);
     const googleCredential = auth.GoogleAuthProvider.credential(idToken);
-    console.log('googleCredential', googleCredential);
     const userInfo = await auth().signInWithCredential(googleCredential);
-    console.log('userInfo', userInfo);
     if (userInfo?.additionalUserInfo?.isNewUser) {
       let data = {
         name: userInfo.user._user.displayName,
@@ -246,15 +242,66 @@ export const googleSignIn = async () => {
         dp: userInfo.user._user.photoURL,
         type: 'google',
       };
-      console.log('data to update is ', data);
       const update = await addUser(data, 'Users');
-      console.log('hello', update);
     } else {
       console.log('else ');
-      // setErrResponse({ status: false, error: 'Error' });
     }
   } catch (error) {
     console.log('error ', error);
-    // setErrResponse({ status: false, error: error.message });
+  }
+};
+
+export const sendDocument = async (id, uuid, file, msg) => {
+  const docId = uuid > id ? `${id}-${uuid}` : `${uuid}-${id}`;
+
+  try {
+    const id = auth().currentUser.uid;
+    return storage()
+      .ref(`conversations/${docId}/${id}`)
+      .putFile(file)
+      .then(() => {
+        return storage()
+          .ref(`conversations/${docId}/${id}`)
+          .getDownloadURL()
+          .then(URL => {
+            return firestore()
+              .collection('conversations')
+              .doc(docId)
+              .collection('messages')
+              .add({
+                ...msg,
+                doc: URL,
+                createdAt: firestore.FieldValue.serverTimestamp(),
+              })
+              .then(() => {
+                const res = {
+                  status: true,
+                  message: 'Document sent successfully.',
+                  doc: URL,
+                };
+                return res;
+              })
+              .catch(error => {
+                const res = {
+                  status: false,
+                  error: error.message,
+                };
+                return res;
+              });
+          });
+      })
+      .catch(error => {
+        const res = {
+          status: false,
+          error: error.message,
+        };
+        return res;
+      });
+  } catch (error) {
+    const res = {
+      status: false,
+      error: error.message,
+    };
+    return res;
   }
 };

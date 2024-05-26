@@ -13,13 +13,10 @@ const GoogleSignupButton = () => {
   const [state, setState] = useState(null);
   const signIn = async () => {
     try {
-      const pla = await GoogleSignin.hasPlayServices();
-      console.log('plapla', pla);
+      await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log('userInfo', userInfo);
       setState({userInfo});
     } catch (error) {
-      console.log('errpr on', error);
       if (isErrorWithCode(error)) {
         switch (error.code) {
           case statusCodes.NO_SAVED_CREDENTIAL_FOUND:
@@ -44,20 +41,9 @@ const GoogleSignupButton = () => {
       }
     }
   };
-  console.log('state', state);
   return (
     <View>
-      <CustomButton
-        text="Google Sign-In"
-        onPress={
-          () => signIn()
-          //   onGoogleButtonPress()
-          //     .then(() => console.log('Signed in with Google!'))
-          //     .catch(er => {
-          //       console.log('error on catch ', er);
-          //     })
-        }
-      />
+      <CustomButton text="Google Sign-In" onPress={signIn} />
     </View>
   );
 };
