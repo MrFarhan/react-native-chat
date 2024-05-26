@@ -14,10 +14,6 @@ import {colors} from '../../Theme';
 const SignIn = () => {
   const {navigate} = useNavigation();
 
-  const handleNavigate = path => {
-    navigate(path);
-  };
-
   return (
     <SafeAreaView style={styles.main}>
       <KeyboardAvoidingView
@@ -31,7 +27,7 @@ const SignIn = () => {
             Don’t have an account?{' '}
             <Text
               style={{color: colors.primary}}
-              onPress={() => handleNavigate('Sign-up')}>
+              onPress={() => navigate('Sign-up')}>
               Sign up
             </Text>
           </Text>

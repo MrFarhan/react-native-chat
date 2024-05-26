@@ -10,6 +10,7 @@ import ValidationError from '../../Components/ValidationError';
 import {useIsFocused} from '@react-navigation/native';
 import {
   getCurrentUserData,
+  signOut,
   updateUser,
   uploadPicture,
 } from '../../service/auth';
@@ -22,6 +23,7 @@ const ProfileForm = () => {
   const [profilePic, setProfilePic] = useState(null);
   const [userData, setUserData] = useState(null);
   const isFocus = useIsFocused();
+  const [loader, setLoader] = useState(false);
   const getUserData = async () => {
     try {
       const data = await getCurrentUserData();
@@ -40,7 +42,7 @@ const ProfileForm = () => {
   };
   useEffect(() => {
     getUserData();
-  }, [isFocus]);
+  }, [isFocus, loader]);
 
   const {
     handleChange,
@@ -56,13 +58,16 @@ const ProfileForm = () => {
     validationSchema: updateProfileSchema,
     onSubmit: async (values, {resetForm}) => {
       try {
+        setLoader(true);
         if (profilePic && profilePic?.path?.includes('file://')) {
           const dp = await uploadPicture(profilePic.path);
           setProfilePic(dp);
         }
         if (userData?.name !== values?.name) {
-          const update = await updateUser(values, 'Users');
+          await updateUser(values, 'Users');
         }
+        await getUserData();
+        setLoader(false);
         Toast.show({
           type: 'success',
           text1: 'Profile updated successfully',
@@ -72,13 +77,9 @@ const ProfileForm = () => {
       }
     },
   });
-  let disabled =
-    userData?.name === values?.name &&
-    profilePic &&
-    !profilePic?.path?.includes('file://');
+
   const HandlePictureChange = image => {
     setProfilePic(image);
-    // console.log(image);
   };
 
   if (loading) {
@@ -121,9 +122,17 @@ const ProfileForm = () => {
       </View>
       <CustomButton
         text={'Update'}
-        buttonStyle={{marginBottom: 0, paddingBottom: 70}}
+        containerStyle={{marginBottom: 0, paddingBottom: 10}}
         onPress={handleSubmit}
-        disabled={disabled}
+        loader={loader}
+      />
+      <CustomButton
+        text={'Signout'}
+        containerStyle={{
+          marginBottom: 0,
+          paddingBottom: 70,
+        }}
+        onPress={signOut}
       />
     </View>
   );

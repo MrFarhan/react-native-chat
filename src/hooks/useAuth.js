@@ -9,7 +9,6 @@ export function useAuth() {
       if (user) {
         setUser(user);
       } else {
-        // User is signed out
         setUser(undefined);
       }
     });

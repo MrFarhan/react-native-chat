@@ -15,7 +15,7 @@ const GoogleSigninButton = () => {
 
   return (
     <View>
-      <CustomButton onPress={googleSignIn} />
+      <CustomButton onPress={googleSignIn} text="Signin with google" />
     </View>
   );
 };

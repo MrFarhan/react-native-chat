@@ -9,7 +9,7 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       SplashScreen.hide();
-    }, 1000);
+    }, 300);
   });
   return (
     <NavigationContainer>

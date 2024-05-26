@@ -14,10 +14,6 @@ import SignUpForm from './SignupForm';
 const Signup = () => {
   const {navigate} = useNavigation();
 
-  const handleNavigate = path => {
-    navigate(path);
-  };
-
   return (
     <SafeAreaView style={styles.main}>
       <KeyboardAvoidingView
@@ -31,7 +27,7 @@ const Signup = () => {
             Already have an account?{' '}
             <Text
               style={{color: colors.primary}}
-              onPress={() => handleNavigate('Sign-in')}>
+              onPress={() => navigate('Sign-in')}>
               Sign In
             </Text>
           </Text>

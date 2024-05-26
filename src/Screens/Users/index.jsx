@@ -5,11 +5,13 @@ import {styles} from './Style.js';
 import Icons from '../../Theme/icons.js';
 import colors from '../../Theme/colors.js';
 import {useIsFocused} from '@react-navigation/native';
-import {ListUsers, signOut} from '../../service/auth.js';
+import {ListUsers, getCurrentUserData, signOut} from '../../service/auth.js';
+import {useAuth} from '../../hooks/useAuth.js';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const isFocused = useIsFocused();
+
   const fetchUsers = async () => {
     const data = await ListUsers();
     setUsers(data);
@@ -18,24 +20,9 @@ const Users = () => {
     fetchUsers();
   }, [isFocused]);
 
-  const HandleLogout = async () => {
-    await signOut().then(() => {});
-  };
   return (
-    <SafeAreaView>
-      <CustomHeading
-        text={'Users'}
-        headingStyle={styles.heading}
-        rightBtn={
-          <Icons.MaterialCommunityIcons
-            name="logout"
-            color={colors.primary}
-            size={28}
-            style={{marginRight: 10}}
-            onPress={HandleLogout}
-          />
-        }
-      />
+    <SafeAreaView style={styles.container}>
+      <CustomHeading text={'Users'} headingStyle={styles.heading} />
       <FlatList
         data={users}
         contentContainerStyle={styles.searchResultCardContainer}

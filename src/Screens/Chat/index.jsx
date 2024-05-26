@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {FlatList, SafeAreaView, Text, View} from 'react-native';
+import {FlatList, SafeAreaView, Text, View, Pressable} from 'react-native';
 import {CustomHeading, UserCard} from '../../Components';
 import {styles} from './Style.js';
 import Icons from '../../Theme/icons.js';
@@ -7,6 +7,7 @@ import colors from '../../Theme/colors.js';
 import {useIsFocused} from '@react-navigation/native';
 import {ChatHistory, DeleteChat, signOut} from '../../service/auth.js';
 import {useAuth} from '../../hooks/useAuth.js';
+import NoDataComponent from '../../Components/NoDataFound/index.jsx';
 
 const Chat = () => {
   const [history, setHistory] = useState([]);
@@ -14,8 +15,12 @@ const Chat = () => {
   const {user} = useAuth();
 
   const HandleDelete = async conversationId => {
-    await DeleteChat(conversationId, user?.uid);
-    fetchHistory();
+    try {
+      await DeleteChat(conversationId, user?.uid);
+      fetchHistory();
+    } catch (error) {
+      console.error('Failed to delete chat:', error);
+    }
   };
 
   const fetchHistory = async () => {
@@ -23,23 +28,24 @@ const Chat = () => {
       const chatHistory = await ChatHistory();
       const currentUserId = user?.uid;
       if (!chatHistory?.length) {
-        setHistory(null);
+        setHistory([]);
+        return;
       }
-      const filteredConversations = chatHistory.map(conversation => {
-        // delete conversation[currentUserId];
-        if (conversation?.['parties']?.[currentUserId]) {
-        }
-        const otherPartyId = Object.entries(conversation.parties).find(
-          key => !!key[1] && key !== currentUserId,
-        );
-        console.log('removed false 1', otherPartyId);
-        return {
-          ...conversation,
-          conversationId: conversation.id,
-          id: otherPartyId[0],
-          name: conversation.partiesInfo[otherPartyId[0]]?.name || 'Unknown',
-        };
-      });
+      const filteredConversations = chatHistory
+        .map(conversation => {
+          const otherParty = Object.entries(conversation.parties).find(
+            ([key, value]) => value && key !== currentUserId,
+          );
+          if (!otherParty) return null;
+          const [otherPartyId] = otherParty;
+          return {
+            ...conversation,
+            conversationId: conversation.id,
+            id: otherPartyId,
+            name: conversation.partiesInfo[otherPartyId]?.name || 'Unknown',
+          };
+        })
+        .filter(Boolean);
       setHistory(filteredConversations);
     } catch (error) {
       console.error('Failed to fetch chat history:', error);
@@ -49,39 +55,30 @@ const Chat = () => {
   useEffect(() => {
     fetchHistory();
   }, [isFocused]);
-  console.log('chat history ', history);
+
   const HandleLogout = async () => {
-    await signOut().then(() => {});
+    try {
+      await signOut();
+    } catch (error) {
+      console.error('Failed to sign out:', error);
+    }
   };
+
   return (
-    <SafeAreaView>
-      <CustomHeading
-        text={'Chat'}
-        headingStyle={styles.heading}
-        rightBtn={
-          <Icons.MaterialCommunityIcons
-            name="logout"
-            color={colors.primary}
-            size={28}
-            style={{marginRight: 10}}
-            onPress={HandleLogout}
-          />
-        }
-      />
+    <SafeAreaView style={styles.container}>
+      <CustomHeading text={'Chat'} headingStyle={styles.heading} />
       <FlatList
         data={history}
-        ListEmptyComponent={() => {
-          <View>
-            <Text>No data found</Text>
-          </View>;
-        }}
-        keyExtractor={key => key.id}
+        ListEmptyComponent={NoDataComponent}
+        keyExtractor={item => item.id}
         contentContainerStyle={styles.searchResultCardContainer}
-        renderItem={({item}) => {
-          return (
-            <UserCard data={item} isDeletable HandleDelete={HandleDelete} />
-          );
-        }}
+        renderItem={({item}) => (
+          <UserCard
+            data={item}
+            isDeletable={true}
+            HandleDelete={HandleDelete}
+          />
+        )}
       />
     </SafeAreaView>
   );

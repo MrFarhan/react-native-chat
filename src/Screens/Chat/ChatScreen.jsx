@@ -9,20 +9,21 @@ import {
   getCurrentUserData,
   sendMsg,
 } from '../../service/auth';
+import {useAuth} from '../../hooks/useAuth';
 
 const ChatScreen = () => {
-  const [messages, setMessages] = useState([]);
   const route = useRoute();
-  const {id, name} = route.params;
-  const uuid = firebase.auth().currentUser.uid;
   const isFocused = useIsFocused();
+  const {data} = route.params;
+  const {id, name} = data || {};
+  const uuid = firebase.auth().currentUser.uid;
 
+  const [messages, setMessages] = useState([]);
   const [userData, setUserData] = useState(null);
-  console.log('user data is ', userData);
   const getUserData = async () => {
     try {
       const data = await getCurrentUserData();
-      setUserData({name: data._data.name});
+      setUserData(data._data);
     } catch (error) {
       console.log('error is ', error);
     }
@@ -36,7 +37,6 @@ const ChatScreen = () => {
       setMessages(res);
     });
 
-    // Cleanup the subscription on unmount
     return () => unsubscribe();
   }, [isFocused, id]);
 
@@ -52,10 +52,9 @@ const ChatScreen = () => {
         GiftedChat.append(previousMessages, msgObj),
       );
       let partiesInfo = {
-        [id]: {name},
-        [uuid]: {name: userData?.name},
+        [id]: {...data}, // other party
+        [uuid]: {...userData}, // current auth user
       };
-      console.log('partiesInfo', partiesInfo);
       await sendMsg(id, uuid, msgObj, partiesInfo);
     },
     [userData?.name],

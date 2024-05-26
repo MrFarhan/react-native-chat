@@ -36,7 +36,10 @@ export default function AppRootRouter() {
 
 function BottomNavigation() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: colors.primary,
+      }}>
       <Tab.Screen
         name="Users"
         component={Users}
@@ -47,7 +50,7 @@ function BottomNavigation() {
               <Icons.FontAwesome
                 name="users"
                 size={26}
-                color={focused ? colors.gray_bg_light : colors.gray}
+                color={focused ? colors.primary : colors.gray}
               />
             );
           },
@@ -63,7 +66,7 @@ function BottomNavigation() {
               <Icons.Entypo
                 name="chat"
                 size={26}
-                color={focused ? colors.gray_bg_light : colors.gray}
+                color={focused ? colors.primary : colors.gray}
               />
             );
           },
@@ -79,7 +82,7 @@ function BottomNavigation() {
               <Icons.Feather
                 name="user"
                 size={26}
-                color={focused ? colors.gray_bg_light : colors.gray}
+                color={focused ? colors.primary : colors.gray}
               />
             );
           },

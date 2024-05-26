@@ -14,10 +14,6 @@ import ForgotPasswordForm from './ForgotPasswordForm';
 const ForgotPassword = () => {
   const {navigate} = useNavigation();
 
-  const handleNavigate = path => {
-    navigate(path);
-  };
-
   return (
     <SafeAreaView style={styles.main}>
       <KeyboardAvoidingView
@@ -29,7 +25,7 @@ const ForgotPassword = () => {
           <Text style={styles.pera}>
             Back to{' '}
             <Text
-              onPress={() => handleNavigate('Sign-in')}
+              onPress={() => navigate('Sign-in')}
               style={{color: colors.primary}}>
               Log In
             </Text>
