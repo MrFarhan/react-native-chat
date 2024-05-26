@@ -2,11 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {FlatList, SafeAreaView} from 'react-native';
 import {CustomHeading, UserCard} from '../../Components/index.js';
 import {styles} from './Style.js';
-import Icons from '../../Theme/icons.js';
-import colors from '../../Theme/colors.js';
 import {useIsFocused} from '@react-navigation/native';
-import {ListUsers, getCurrentUserData, signOut} from '../../service/auth.js';
-import {useAuth} from '../../hooks/useAuth.js';
+import {ListUsers} from '../../service/auth.js';
 
 const Users = () => {
   const [users, setUsers] = useState([]);

@@ -32,7 +32,14 @@ export const resetPassword = async email => {
 };
 
 export const signOut = async email => {
-  const res = await auth().signOut();
+  const currentUser = await getCurrentUserData();
+  const res = await auth()
+    .signOut()
+    .then(() => {
+      if (currentUser?._data?.type === 'google') {
+        GoogleSignin.revokeAccess();
+      }
+    });
   return res;
 };
 

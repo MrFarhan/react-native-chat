@@ -56,14 +56,6 @@ const Chat = () => {
     fetchHistory();
   }, [isFocused]);
 
-  const HandleLogout = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error('Failed to sign out:', error);
-    }
-  };
-
   return (
     <SafeAreaView style={styles.container}>
       <CustomHeading text={'Chat'} headingStyle={styles.heading} />
