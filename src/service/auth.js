@@ -1,4 +1,3 @@
-import {utils} from '@react-native-firebase/app';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -36,6 +35,7 @@ export const signOut = async email => {
   const res = await auth()
     .signOut()
     .then(() => {
+      // It will ask user to choose account for login if user is logouted out
       if (currentUser?._data?.type === 'google') {
         GoogleSignin.revokeAccess();
       }
@@ -249,9 +249,7 @@ export const googleSignIn = async () => {
         dp: userInfo.user._user.photoURL,
         type: 'google',
       };
-      const update = await addUser(data, 'Users');
-    } else {
-      console.log('else ');
+      await addUser(data, 'Users');
     }
   } catch (error) {
     console.log('error ', error);
@@ -262,40 +260,38 @@ export const sendDocument = async (id, uuid, file, msg) => {
   const docId = uuid > id ? `${id}-${uuid}` : `${uuid}-${id}`;
 
   try {
+    let temp = new Date().getTime();
     const id = auth().currentUser.uid;
     return storage()
-      .ref(`conversations/${docId}/${id}`)
+      .ref(`conversations/${docId}/${id}/${temp}`)
       .putFile(file)
-      .then(() => {
-        return storage()
-          .ref(`conversations/${docId}/${id}`)
-          .getDownloadURL()
-          .then(URL => {
-            return firestore()
-              .collection('conversations')
-              .doc(docId)
-              .collection('messages')
-              .add({
-                ...msg,
-                doc: URL,
-                createdAt: firestore.FieldValue.serverTimestamp(),
-              })
-              .then(() => {
-                const res = {
-                  status: true,
-                  message: 'Document sent successfully.',
-                  doc: URL,
-                };
-                return res;
-              })
-              .catch(error => {
-                const res = {
-                  status: false,
-                  error: error.message,
-                };
-                return res;
-              });
-          });
+      .then(async () => {
+        const URL = await storage()
+          .ref(`conversations/${docId}/${id}/${temp}`)
+          .getDownloadURL();
+        try {
+          await firestore()
+            .collection('conversations')
+            .doc(docId)
+            .collection('messages')
+            .add({
+              ...msg,
+              doc: URL,
+              createdAt: firestore.FieldValue.serverTimestamp(),
+            });
+          const res = {
+            status: true,
+            message: 'Document sent successfully.',
+            doc: URL,
+          };
+          return res;
+        } catch (error) {
+          const res_1 = {
+            status: false,
+            error: error.message,
+          };
+          return res_1;
+        }
       })
       .catch(error => {
         const res = {

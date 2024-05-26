@@ -60,4 +60,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#d8d8db',
   },
+
+  loaderContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 600,
+  },
 });

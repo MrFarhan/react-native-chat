@@ -15,4 +15,9 @@ export const styles = StyleSheet.create({
     marginVertical: 20,
     fontFamily: 'Reddit Mono',
   },
+  headingSubContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

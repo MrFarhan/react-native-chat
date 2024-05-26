@@ -8,11 +8,9 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 20,
   },
   heading: {
     fontSize: 40,
-    // fontWeight: 'bold',
     fontFamily: 'Reddit Mono Bold',
   },
   subHeading: {fontSize: 12, marginBottom: 20, color: colors.gray_font},

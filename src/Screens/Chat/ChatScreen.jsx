@@ -25,11 +25,14 @@ const ChatScreen = () => {
 
   const route = useRoute();
   const isFocused = useIsFocused();
+
   const {data} = route.params;
   const {id, name} = data || {};
   const uuid = firebase.auth().currentUser.uid;
+
   const [messages, setMessages] = useState([]);
   const [userData, setUserData] = useState(null);
+
   const getUserData = async () => {
     try {
       const data = await getCurrentUserData();
@@ -38,6 +41,7 @@ const ChatScreen = () => {
       console.log('error is ', error);
     }
   };
+
   useEffect(() => {
     getUserData();
   }, [isFocused]);
@@ -65,7 +69,6 @@ const ChatScreen = () => {
         [id]: {...data}, // other party
         [uuid]: {...userData}, // current auth user
       };
-      console.log('partiesInfo', partiesInfo);
       await sendMsg(id, uuid, msgObj, partiesInfo);
     },
     [userData?.name],
@@ -79,7 +82,6 @@ const ChatScreen = () => {
       },
       image: imagePath,
     };
-    console.log('props', props);
     try {
       const result = await DocumentPicker.pick({
         type: [DocumentPicker.types.allFiles],
@@ -89,7 +91,6 @@ const ChatScreen = () => {
       });
       const fileUri = result[0].fileCopyUri;
       const send = await sendDocument(id, uuid, fileUri, {...newMessage});
-      console.log(send, result[0], fileUri);
       if (!fileUri) {
         console.log('File URI is undefined or null');
         return;
@@ -108,7 +109,7 @@ const ChatScreen = () => {
       }
     }
   };
-
+  console.log('messages are ', messages);
   const renderSend = props => {
     return (
       <View style={styles.ctaContainer}>
@@ -136,35 +137,14 @@ const ChatScreen = () => {
 
   const renderBubble = props => {
     const {currentMessage} = props;
-    console.log('currentMessage', currentMessage?.doc);
     if (currentMessage?.doc) {
       return (
-        <TouchableOpacity
-          style={{
-            ...styles.fileContainer,
-            backgroundColor:
-              props.currentMessage.user._id === 2 ? '#2e64e5' : '#efefef',
-            borderBottomLeftRadius:
-              props.currentMessage.user._id === 2 ? 15 : 5,
-            borderBottomRightRadius:
-              props.currentMessage.user._id === 2 ? 5 : 15,
-          }}
-          onPress={() => setFileVisible(true)}>
-          {/* <InChatFileTransfer
-            style={{marginTop: -10}}
-            filePath={currentMessage.file.url}
-          />
-          <InChatViewFile
-            props={props}
-            visible={fileVisible}
-            onClose={() => setFileVisible(false)}
-          /> */}
+        <TouchableOpacity style={{marginHorizontal: 5, marginVertical: 5}}>
           <Image source={{uri: currentMessage?.doc}} width={50} height={50} />
           <View style={{flexDirection: 'column'}}>
             <Text
               style={{
                 ...styles.fileText,
-                color: currentMessage.user._id === 2 ? 'white' : 'black',
               }}>
               {currentMessage.text}
             </Text>
@@ -223,6 +203,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'red',
   },
 });

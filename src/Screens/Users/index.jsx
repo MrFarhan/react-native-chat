@@ -21,6 +21,8 @@ const Users = () => {
     <SafeAreaView style={styles.container}>
       <CustomHeading text={'Users'} headingStyle={styles.heading} />
       <FlatList
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         data={users}
         contentContainerStyle={styles.searchResultCardContainer}
         renderItem={({item}) => {

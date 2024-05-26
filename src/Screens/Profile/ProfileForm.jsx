@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {ActivityIndicator, View} from 'react-native';
-import Icons from '../../Theme/icons';
 import {styles} from './Style';
 import {CustomButton, CustomHeading, CustomTextfield} from '../../Components';
 import {useFormik} from 'formik';
@@ -15,7 +14,6 @@ import {
   uploadPicture,
 } from '../../service/auth';
 import {ProfilePic} from './ProfilePic';
-import {images} from '../../Theme';
 import Toast from 'react-native-toast-message';
 
 const ProfileForm = () => {
@@ -52,13 +50,13 @@ const ProfileForm = () => {
     values,
     handleSubmit,
     setFieldValue,
-    dirty,
   } = useFormik({
     initialValues: updateProfileInitialValues,
     validationSchema: updateProfileSchema,
-    onSubmit: async (values, {resetForm}) => {
+    onSubmit: async values => {
       try {
         setLoader(true);
+        // check for local image
         if (profilePic && profilePic?.path?.includes('file://')) {
           const dp = await uploadPicture(profilePic.path);
           setProfilePic(dp);
@@ -84,13 +82,7 @@ const ProfileForm = () => {
 
   if (loading) {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: 600,
-        }}>
+      <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" />
       </View>
     );

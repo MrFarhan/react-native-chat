@@ -11,12 +11,7 @@ const CustomHeading = props => {
 
   return (
     <View style={styles.headingContainer}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+      <View style={styles.headingSubContainer}>
         {isBack && (
           <Icons.Ionicons
             name="arrow-back"

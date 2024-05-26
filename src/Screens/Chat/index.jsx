@@ -60,6 +60,8 @@ const Chat = () => {
     <SafeAreaView style={styles.container}>
       <CustomHeading text={'Chat'} headingStyle={styles.heading} />
       <FlatList
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         data={history}
         ListEmptyComponent={NoDataComponent}
         keyExtractor={item => item.id}
