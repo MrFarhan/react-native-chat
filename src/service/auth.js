@@ -204,35 +204,26 @@ export const ChatHistory = async () => {
 
 export const DeleteChat = async (conversationId, userId) => {
   try {
-    console.log(
-      'Received IDs - Conversation ID:',
-      conversationId,
-      'User ID:',
-      userId,
-    );
-
     const conversationRef = firestore()
       .collection('conversations')
       .doc(conversationId);
 
-    const conversationSnapshot = await conversationRef.get();
-    console.log(
-      'Conversation Snapshot:',
-      conversationSnapshot.exists ? 'Exists' : 'Does not exist',
-    );
+    // to delete chat from both side
+    await conversationRef.delete();
 
-    if (!conversationSnapshot.exists) {
-      throw new Error(`Conversation with ID ${conversationId} not found.`);
-    }
+    const messagesQuerySnapshot = await firestore()
+      .collection('conversations')
+      .doc(conversationId)
+      .collection('messages')
+      .get();
 
-    // Checking the structure of the document before updating
-    console.log('Document data:', conversationSnapshot.data());
+    const batch = firestore().batch();
 
-    await conversationRef.update({[`parties.${userId}`]: false});
+    messagesQuerySnapshot.forEach(documentSnapshot => {
+      batch.delete(documentSnapshot.ref);
+    });
 
-    console.log('Update successful');
-
-    return true; // Assuming successful update
+    return batch.commit();
   } catch (error) {
     console.error('Error:', error.message);
     throw error;
